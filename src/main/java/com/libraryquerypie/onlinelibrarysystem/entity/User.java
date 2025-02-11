@@ -1,5 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.entity;
 
+import com.libraryquerypie.onlinelibrarysystem.enums.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

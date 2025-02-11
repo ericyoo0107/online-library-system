@@ -1,4 +1,4 @@
-package com.libraryquerypie.onlinelibrarysystem.entity;
+package com.libraryquerypie.onlinelibrarysystem.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
