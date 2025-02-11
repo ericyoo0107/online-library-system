@@ -3,6 +3,7 @@ package com.libraryquerypie.onlinelibrarysystem.entity;
 import com.libraryquerypie.onlinelibrarysystem.enums.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,11 @@ public class User extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    @Builder
+    public User(String emailId, String hashPassword, Role role) {
+        this.emailId = emailId;
+        this.hashPassword = hashPassword;
+        this.role = role;
+    }
 }
