@@ -14,7 +14,6 @@ public class SignupRequest {
     private String email;
     @NotBlank(message = "비밀번호 입력은 필수입니다.")
     private String password;
-    @NotBlank(message = "ADMIN 또는 USER 중 하나를 선택해주세요.")
     private Role role;
 
     @Builder
