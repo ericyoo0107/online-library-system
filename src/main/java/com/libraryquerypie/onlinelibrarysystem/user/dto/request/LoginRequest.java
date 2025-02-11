@@ -1,4 +1,4 @@
-package com.libraryquerypie.onlinelibrarysystem.user;
+package com.libraryquerypie.onlinelibrarysystem.user.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.libraryquerypie.onlinelibrarysystem.user;
+package com.libraryquerypie.onlinelibrarysystem.user.dto.request;
 
 import com.libraryquerypie.onlinelibrarysystem.entity.User;
 import com.libraryquerypie.onlinelibrarysystem.enums.Role;
