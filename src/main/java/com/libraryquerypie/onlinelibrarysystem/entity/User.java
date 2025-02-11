@@ -22,4 +22,7 @@ public class User extends BaseTimeEntity{
     @Column(name = "hash_password", nullable = false , unique = true)
     private String hashPassword;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 }
