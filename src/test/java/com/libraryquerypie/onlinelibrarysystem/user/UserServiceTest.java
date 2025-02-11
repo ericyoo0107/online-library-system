@@ -4,6 +4,7 @@ import com.libraryquerypie.onlinelibrarysystem.entity.User;
 import com.libraryquerypie.onlinelibrarysystem.enums.Role;
 import com.libraryquerypie.onlinelibrarysystem.jwt.JwtUtils;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.LoginRequest;
+import com.libraryquerypie.onlinelibrarysystem.user.dto.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ public class UserServiceTest {
     @Autowired
     private JwtUtils jwtUtils;
 
-   @BeforeEach
+    @BeforeEach
     public void setUp() {
         userRepository.deleteAll();
     }
@@ -52,7 +53,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원가입 되어 있지 않은 이메일은 로그인에 실패한다.")
-    public void testLogin_InvalidEmail() {
+    public void Login_InvalidEmail() {
         // Given
         LoginRequest loginRequest = new LoginRequest("invalid@email.com", "password");
 
@@ -62,12 +63,32 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("회원가입 되어 있지 않은 비밀번호는 로그인에 실패한다.")
-    public void testLogin_InvalidPassword() {
+    public void Login_InvalidPassword() {
         // Given
         LoginRequest loginRequest = new LoginRequest("ericyoo0107@naver.com", "wrong");
 
         // When, Then
         assertThrows(IllegalArgumentException.class, () -> userService.login(loginRequest));
+    }
+
+    @Test
+    @DisplayName("일반 회원으로 회원가입 한다.")
+    public void Signup_Success() {
+        // Given
+        SignupRequest request = SignupRequest.builder()
+                .email("newEmail@naver.com")
+                .password("password")
+                .role(Role.USER)
+                .build();
+
+        // When
+        String token = userService.signup(request);
+        User user = userRepository.findByEmailId(request.getEmail()).get();
+
+        // Then
+        assertThat(token).isNotNull();
+        assertThat(jwtUtils.extractEmailId(token)).isEqualTo(request.getEmail());
+        assertThat(passwordEncoder.matches(request.getPassword(), user.getHashPassword())).isTrue();
     }
 
     @Transactional
