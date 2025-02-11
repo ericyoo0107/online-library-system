@@ -91,6 +91,21 @@ public class UserServiceTest {
         assertThat(passwordEncoder.matches(request.getPassword(), user.getHashPassword())).isTrue();
     }
 
+    @Test
+    @DisplayName("이미 가입되어 있는 이메일로 회원가입하면 실패한다.")
+    public void Signup_DuplicateEmail() {
+        // Given
+        createDummyUser();
+        SignupRequest request = SignupRequest.builder()
+                .email("ericyoo0107@naver.com")
+                .password("password")
+                .role(Role.USER)
+                .build();
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> userService.signup(request));
+    }
+
     @Transactional
     public void createDummyUser() {
         User user = User.builder()
