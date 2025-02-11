@@ -50,6 +50,26 @@ public class UserServiceTest {
         assertThat(jwtUtils.extractEmailId(token)).isEqualTo(loginRequest.getEmailId());
     }
 
+    @Test
+    @DisplayName("회원가입 되어 있지 않은 이메일은 로그인에 실패한다.")
+    public void testLogin_InvalidEmail() {
+        // Given
+        LoginRequest loginRequest = new LoginRequest("invalid@email.com", "password");
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> userService.login(loginRequest));
+    }
+
+    @Test
+    @DisplayName("회원가입 되어 있지 않은 비밀번호는 로그인에 실패한다.")
+    public void testLogin_InvalidPassword() {
+        // Given
+        LoginRequest loginRequest = new LoginRequest("ericyoo0107@naver.com", "wrong");
+
+        // When, Then
+        assertThrows(IllegalArgumentException.class, () -> userService.login(loginRequest));
+    }
+
     @Transactional
     public void createDummyUser() {
         User user = User.builder()
