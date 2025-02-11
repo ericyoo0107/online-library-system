@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Table(name = "borrows")
@@ -15,6 +17,9 @@ public class Borrow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "borrow_id")
     private Long id;
+
+    @Column(name = "return_date", nullable = false)
+    private LocalDate returnDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "borrow_status", nullable = false)
