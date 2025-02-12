@@ -1,6 +1,7 @@
 package com.libraryquerypie.onlinelibrarysystem.user;
 
 import com.libraryquerypie.onlinelibrarysystem.entity.User;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadLoginException;
 import com.libraryquerypie.onlinelibrarysystem.jwt.JwtUtils;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.LoginRequest;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.SignupRequest;
@@ -20,9 +21,9 @@ public class UserService {
 
     public String login(LoginRequest loginRequest){
         User user = userRepository.findByEmailId(loginRequest.getEmailId())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+                .orElseThrow(() -> new BadLoginException("가입되지 않은 E-MAIL"));
         if(!passwordEncoder.matches(loginRequest.getPassword(), user.getHashPassword())){
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            throw new BadLoginException("잘못된 비밀번호");
         }
         String accessToken = jwtUtils.generateToken(user);
         return accessToken;
