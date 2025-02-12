@@ -53,13 +53,13 @@ public class JwtUtils {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            log.info("JWT 형식이 잘못되었습니다.", e);
+            log.error("JWT 형식이 잘못되었습니다.", e);
         } catch (ExpiredJwtException e) {
-            log.info("만료된 토큰입니다.", e);
+            log.error("만료된 토큰입니다.", e);
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 형식입니다.", e);
+            log.error("지원되지 않는 JWT 형식입니다.", e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 비어있습니다.", e);
+            log.error("JWT 토큰이 비어있습니다.", e);
         }
         return false;
     }
