@@ -35,7 +35,10 @@ public class SecurityConfig {
                 .httpBasic((httpBasic) -> httpBasic.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/v1/user/login", "/api/v1/user/signup").permitAll()
+                                .requestMatchers("/api/v1/user/login",
+                                        "/api/v1/user/signup",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
