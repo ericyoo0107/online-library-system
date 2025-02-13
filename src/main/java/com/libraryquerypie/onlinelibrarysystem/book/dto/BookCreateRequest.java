@@ -3,6 +3,7 @@ package com.libraryquerypie.onlinelibrarysystem.book.dto;
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -22,6 +23,15 @@ public class BookCreateRequest {
     @NotNull(message = "출판일 입력은 필수입니다.")
     private LocalDate publishDate;
     private String tag;
+
+    @Builder
+    public BookCreateRequest(String isbn, String title, String author, LocalDate publishDate, String tag) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.publishDate = publishDate;
+        this.tag = tag;
+    }
 
     public static Book toEntity(BookCreateRequest bookCreateRequest) {
         return Book.builder()
