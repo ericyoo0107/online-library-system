@@ -2,6 +2,7 @@ package com.libraryquerypie.onlinelibrarysystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,16 @@ public class Book extends BaseEntity{
 
     @Column(name = "publish_date", nullable = false)
     private LocalDate publishDate;
+
+    @Column(name ="tag", nullable = true)
+    private String tag;
+
+    @Builder
+    public Book(String ISBN, String title, String author, LocalDate publishDate, String tag) {
+        this.ISBN = ISBN;
+        this.title = title;
+        this.author = author;
+        this.publishDate = publishDate;
+        this.tag = tag;
+    }
 }

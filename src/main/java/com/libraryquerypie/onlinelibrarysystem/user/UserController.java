@@ -42,7 +42,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 후 Jwt 토큰을 반환",
                     content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
-            @ApiResponse(responseCode = "400", description = "이미 가입되어 있는 E-MAIL인 경우",
+            @ApiResponse(responseCode = "400", description = "이미 가입되어 있는 E-MAIL인 경우 예외 발생",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest signupRequest) {
