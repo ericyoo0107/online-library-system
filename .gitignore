@@ -38,3 +38,6 @@ out/
 
 # yml 파일
 *.yml
+
+# generated 파일
+generated/
