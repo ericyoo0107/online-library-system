@@ -1,6 +1,9 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
 import com.libraryquerypie.onlinelibrarysystem.book.dto.BookCreateRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchResponse;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.PageBookResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +41,18 @@ public class BookController {
     public ResponseEntity<String> registerBook(@RequestBody @Valid BookCreateRequest bookRequest) {
         Long bookId = bookService.registerBook(bookRequest);
         return ResponseEntity.created(URI.create("/book/" + bookId)).body("도서 등록 성공");
+    }
+
+    @GetMapping("/list/find")
+    @Operation(summary = "도서 검색", description = "도서를 검색하는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도서 검색 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    })
+    public ResponseEntity<PageBookResponse> searchBook(BookSearchRequest request, Pageable pageable) {
+        PageBookResponse response = bookService.searchBook(request, pageable);
+        return ResponseEntity.ok(response);
     }
 }
