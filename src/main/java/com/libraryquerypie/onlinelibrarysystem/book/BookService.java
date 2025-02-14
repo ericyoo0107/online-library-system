@@ -1,9 +1,9 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookCreateRequest;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchRequest;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchResponse;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.PageBookResponse;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookCreateRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.response.BookSearchResponse;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.response.PageBookResponse;
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
 import lombok.RequiredArgsConstructor;

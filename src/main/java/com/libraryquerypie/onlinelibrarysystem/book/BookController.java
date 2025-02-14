@@ -1,9 +1,8 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookCreateRequest;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchRequest;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchResponse;
-import com.libraryquerypie.onlinelibrarysystem.book.dto.PageBookResponse;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookCreateRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.response.PageBookResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

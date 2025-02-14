@@ -1,4 +1,4 @@
-package com.libraryquerypie.onlinelibrarysystem.book.dto;
+package com.libraryquerypie.onlinelibrarysystem.book.dto.request;
 
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import jakarta.validation.constraints.NotBlank;

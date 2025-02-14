@@ -1,6 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSearchRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchRequest;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSortBy;
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import com.libraryquerypie.onlinelibrarysystem.entity.QBook;

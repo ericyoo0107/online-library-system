@@ -1,5 +1,6 @@
-package com.libraryquerypie.onlinelibrarysystem.book.dto;
+package com.libraryquerypie.onlinelibrarysystem.book.dto.request;
 
+import com.libraryquerypie.onlinelibrarysystem.book.dto.BookSortBy;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

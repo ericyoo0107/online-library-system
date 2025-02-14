@@ -1,4 +1,4 @@
-package com.libraryquerypie.onlinelibrarysystem.book.dto;
+package com.libraryquerypie.onlinelibrarysystem.book.dto.response;
 
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import lombok.Builder;

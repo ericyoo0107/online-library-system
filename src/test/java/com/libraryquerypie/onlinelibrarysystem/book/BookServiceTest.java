@@ -1,15 +1,13 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
-import com.libraryquerypie.onlinelibrarysystem.book.dto.BookCreateRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookCreateRequest;
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
