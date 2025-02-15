@@ -2,7 +2,9 @@ package com.libraryquerypie.onlinelibrarysystem.user;
 
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.LoginRequest;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.SignupRequest;
+import com.libraryquerypie.onlinelibrarysystem.user.dto.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,10 +13,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,5 +49,33 @@ public class UserController {
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest signupRequest) {
         String token = userService.signup(signupRequest);
         return ResponseEntity.ok(token);
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "사용자 조회", description = "사용자 정보를 조회/검색 하는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자 조회 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    })
+    public ResponseEntity<List<UserResponse>> getAllUser() {
+        List<UserResponse> response = userService.getAllUser();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list/{userId}")
+    @Operation(summary = "사용자 조회", description = "사용자 정보를 조회/검색 하는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자 조회 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "사용자 정보 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    })
+    public ResponseEntity<List<UserResponse>> getUser(
+            @Parameter(description = "사용자 ID", required = false, example = "1")
+            @PathVariable(value = "userId", required = false) Long userId) {
+        List<UserResponse> response = userService.getUser(userId);
+        return ResponseEntity.ok(response);
     }
 }
