@@ -4,6 +4,7 @@ import com.libraryquerypie.onlinelibrarysystem.borrow.dto.BookBorrowRequest;
 import com.libraryquerypie.onlinelibrarysystem.enums.BorrowStatus;
 import com.libraryquerypie.onlinelibrarysystem.jwt.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +20,7 @@ import java.net.URI;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/borrow")
-    @Tag(name = "Borrow API", description = "대출 및 반납 관리 관련 API")
+@Tag(name = "Borrow API", description = "대출 및 반납 관리 관련 API")
 public class BorrowController {
 
     private final BorrowService borrowService;
@@ -39,7 +40,9 @@ public class BorrowController {
             @ApiResponse(responseCode = "409", description = "이미 대출 중인 도서",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
-    public ResponseEntity<String> registerBorrow(@RequestHeader("Authorization") String token, @RequestBody @Valid BookBorrowRequest request) {
+    public ResponseEntity<String> registerBorrow(
+            @Parameter(description = "Bearer {JWT}", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbElkIjoiZWVlQGdtYWlsLmNvbSIsImlhdCI6MTczOTYzMzUxMywiZXhwIjoxNzM5NzE5OTEzfQ.PVkQ-qZk43EElq-3dJ99Ur-zOMy5ujeTkAiYulIBnag")
+            @RequestHeader("Authorization") String token, @RequestBody @Valid BookBorrowRequest request) {
         String jwt = token.substring(7);
         String emailId = jwtUtils.extractEmailId(jwt);
         Long borrowId = borrowService.registerBorrow(emailId, request);
@@ -58,7 +61,9 @@ public class BorrowController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
-    public ResponseEntity<String> checkBorrow(@PathVariable("bookId") Long bookId) {
+    public ResponseEntity<String> checkBorrow(
+            @Parameter(name = "bookId", description = "도서의 고유 ID", required = true, example = "1")
+                                                  @PathVariable("bookId") Long bookId) {
         String status = borrowService.checkBorrow(bookId);
         return ResponseEntity.ok(status);
     }
@@ -77,7 +82,11 @@ public class BorrowController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
-    public ResponseEntity<String> returnBook(@RequestHeader("Authorization") String token, @PathVariable("bookId") Long bookId) {
+    public ResponseEntity<String> returnBook(
+            @Parameter(description = "Bearer {JWT}", required = true, example = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbElkIjoiZWVlQGdtYWlsLmNvbSIsImlhdCI6MTczOTYzMzUxMywiZXhwIjoxNzM5NzE5OTEzfQ.PVkQ-qZk43EElq-3dJ99Ur-zOMy5ujeTkAiYulIBnag")
+            @RequestHeader("Authorization") String token,
+                                             @Parameter(name = "bookId", description = "도서의 고유 ID", required = true, example = "1")
+                                             @PathVariable("bookId") Long bookId) {
         String jwt = token.substring(7);
         String emailId = jwtUtils.extractEmailId(jwt);
         borrowService.returnBook(emailId, bookId);

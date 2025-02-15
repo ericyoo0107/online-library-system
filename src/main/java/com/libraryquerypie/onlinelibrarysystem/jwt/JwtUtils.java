@@ -42,6 +42,9 @@ public class JwtUtils {
 
     private Claims parseClaims(String accessToken) {
         try {
+            if (accessToken.startsWith("Bearer ")) {
+                accessToken = accessToken.substring(7);
+            }
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
@@ -50,6 +53,9 @@ public class JwtUtils {
 
     public boolean validateToken(String token) {
         try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
