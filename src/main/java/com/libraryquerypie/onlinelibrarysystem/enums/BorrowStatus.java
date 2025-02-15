@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum BorrowStatus {
-    BORROW("대출 중"), RETURN("반납 완료");
+    BORROW("대출 중"), RETURN("대출 가능");
 
     private final String status;
 }

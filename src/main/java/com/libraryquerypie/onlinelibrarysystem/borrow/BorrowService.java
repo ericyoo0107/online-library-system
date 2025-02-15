@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.rmi.AlreadyBoundException;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -40,5 +41,12 @@ public class BorrowService {
                 .orElseThrow(() -> new NotFoundException(ErrorCode.BOOK_NOT_FOUND, request.getBookId().toString()));
         Borrow borrow = borrowRepository.save(Borrow.borrowBook(request.getReturnDate(), user, book));
         return borrow.getId();
+    }
+
+    public String checkBorrow(Long bookId) {
+        List<Borrow> borrowingBook = borrowRepository.findBorrowByBookId(bookId);
+        if (borrowingBook.isEmpty()) return BorrowStatus.RETURN.getStatus();
+        else if (borrowingBook.size() > 1) log.error("대출 시스템에 문제가 생겼습니다.");
+        return BorrowStatus.BORROW.getStatus();
     }
 }

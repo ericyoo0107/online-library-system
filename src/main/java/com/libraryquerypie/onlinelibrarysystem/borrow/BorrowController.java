@@ -1,6 +1,7 @@
 package com.libraryquerypie.onlinelibrarysystem.borrow;
 
 import com.libraryquerypie.onlinelibrarysystem.borrow.dto.BookBorrowRequest;
+import com.libraryquerypie.onlinelibrarysystem.enums.BorrowStatus;
 import com.libraryquerypie.onlinelibrarysystem.jwt.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,5 +44,20 @@ public class BorrowController {
         String emailId = jwtUtils.extractEmailId(jwt);
         Long borrowId = borrowService.registerBorrow(emailId, request);
         return ResponseEntity.created(URI.create("/borrow/" + borrowId)).body("도서 대출 성공");
+    }
+
+    @GetMapping("/check/{bookId}")
+    @Operation(summary = "대출 확인", description = "도서가 대출 중인지 확인합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도서 대출 가능",
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+    })
+    public ResponseEntity<String> checkBorrow(@PathVariable("bookId") Long bookId) {
+        String status = borrowService.checkBorrow(bookId);
+        return ResponseEntity.ok(status);
     }
 }
