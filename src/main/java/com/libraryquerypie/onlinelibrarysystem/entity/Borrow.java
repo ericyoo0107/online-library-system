@@ -3,6 +3,7 @@ package com.libraryquerypie.onlinelibrarysystem.entity;
 import com.libraryquerypie.onlinelibrarysystem.enums.BorrowStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Table(name = "borrows")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Borrow {
+public class Borrow extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +34,21 @@ public class Borrow {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    @Builder
+    public Borrow(LocalDate returnDate, BorrowStatus borrowStatus, User user, Book book) {
+        this.returnDate = returnDate;
+        this.borrowStatus = borrowStatus;
+        this.user = user;
+        this.book = book;
+    }
+
+    public static Borrow borrowBook(LocalDate returnDate, User user, Book book) {
+        return Borrow.builder()
+                .returnDate(returnDate)
+                .borrowStatus(BorrowStatus.BORROW)
+                .user(user)
+                .book(book)
+                .build();
+    }
 }
