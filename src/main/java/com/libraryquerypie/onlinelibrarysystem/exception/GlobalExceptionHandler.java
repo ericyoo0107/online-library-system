@@ -1,11 +1,12 @@
 package com.libraryquerypie.onlinelibrarysystem.exception;
 
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadRequestException;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,6 +23,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity badRequestExHandler(BadRequestException ex) {
         String messageExtra = ex.getDetailMessage();
+        ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity notFoundExHandler(NotFoundException ex) {
+        String messageExtra = ex.getDetailInfo();
+        ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
+    }
+
+    @ExceptionHandler(DuplicateIsbnException.class)
+    public ResponseEntity duplicateIsbnExHandler(DuplicateIsbnException ex) {
+        String messageExtra = ex.getIsbn();
         ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
         return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
     }
