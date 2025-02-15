@@ -2,8 +2,11 @@ package com.libraryquerypie.onlinelibrarysystem.book;
 
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookCreateRequest;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookUpdateRequest;
+import com.libraryquerypie.onlinelibrarysystem.book.dto.response.BookSearchResponse;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.response.PageBookResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,7 +29,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/register")
-    @Operation(summary = "도서 등록", description = "새로운 도서를 추가 하는 API")
+    @Operation(summary = "도서 등록", description = "새로운 도서를 추가합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "새로운 도서 등록 성공",
                     content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
@@ -43,7 +46,7 @@ public class BookController {
     }
 
     @GetMapping("/list/find")
-    @Operation(summary = "도서 검색", description = "도서를 검색하는 API")
+    @Operation(summary = "도서 검색", description = "등록된 모든 도서를 조회하거나 특정 도서를 검색합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도서 검색 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
@@ -52,6 +55,26 @@ public class BookController {
     })
     public ResponseEntity<PageBookResponse> searchBook(BookSearchRequest request, Pageable pageable) {
         PageBookResponse response = bookService.searchBook(request, pageable);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PutMapping("/update/{bookId}")
+    @Operation(summary = "도서 수정", description = "도서 정보를 업데이트합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도서 수정 성공",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    })
+    public ResponseEntity<BookSearchResponse> updateBook(
+            @Parameter(name = "bookId", description = "도서의 고유 ID", required = true, example = "1") @PathVariable("bookId") Long bookId,
+            @RequestBody @Valid BookUpdateRequest request) {
+        BookSearchResponse response = bookService.updateBook(bookId, request);
         return ResponseEntity.ok(response);
     }
 }

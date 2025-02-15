@@ -33,15 +33,4 @@ public class PageBookResponse {
         this.totalPages = totalPages;
         this.last = last;
     }
-
-    public static PageBookResponse fromPage(Page<BookSearchResponse> page) {
-        return PageBookResponse.builder()
-                .content(page.getContent())
-                .pageNumber(page.getNumber())
-                .pageSize(page.getSize())
-                .totalElements(page.getTotalElements())
-                .totalPages(page.getTotalPages())
-                .last(page.isLast())
-                .build();
-    }
 }

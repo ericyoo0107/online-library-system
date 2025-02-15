@@ -1,5 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.entity;
 
+import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,5 +42,13 @@ public class Book {
         this.author = author;
         this.publishDate = publishDate;
         this.tag = tag;
+    }
+
+    public Book update(BookUpdateRequest request) {
+        this.title = request.getTitle();
+        this.author = request.getAuthor();
+        this.publishDate = request.getPublishDate();
+        this.tag = request.getTag();
+        return this;
     }
 }
