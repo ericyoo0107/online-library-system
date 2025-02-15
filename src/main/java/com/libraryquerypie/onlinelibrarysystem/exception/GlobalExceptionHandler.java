@@ -1,9 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.exception;
 
-import com.libraryquerypie.onlinelibrarysystem.exception.custom.AlreadyBorrowException;
-import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadRequestException;
-import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
-import com.libraryquerypie.onlinelibrarysystem.exception.custom.NotFoundException;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
@@ -49,6 +46,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
     }
 
+    @ExceptionHandler(BookConflictException.class)
+    public ResponseEntity bookConflictExHandler(BookConflictException ex) {
+        String messageExtra = ex.getIsbn();
+        ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
+    }
 
     /**
      * DTO의 request가 컨트롤러 @Valid에서 빈 검증 통과 못한 경우  (G-001)

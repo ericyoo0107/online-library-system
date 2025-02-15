@@ -1,5 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.borrow;
 
+import com.libraryquerypie.onlinelibrarysystem.entity.Book;
 import com.libraryquerypie.onlinelibrarysystem.entity.Borrow;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,8 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
     @Query("select b from Borrow b where b.user.emailId = :emailId and b.book.id = :bookId")
     List<Borrow> findBorrowByUserIdAndBookId(@Param("emailId") String emailId, @Param("bookId") Long bookId);
+
+    List<Borrow> findByBook(Book book);
+
+    void deleteAllByBook(Book book);
 }

@@ -89,6 +89,8 @@ public class BookController {
             @ApiResponse(responseCode = "401", description = "회원 인가 실패",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "409", description = "대출 중인 도서를 삭제 시도",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
     public ResponseEntity<String> deleteBook(

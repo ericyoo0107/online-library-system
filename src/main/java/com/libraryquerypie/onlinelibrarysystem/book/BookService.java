@@ -5,8 +5,12 @@ import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchReques
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookUpdateRequest;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.response.BookSearchResponse;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.response.PageBookResponse;
+import com.libraryquerypie.onlinelibrarysystem.borrow.BorrowRepository;
 import com.libraryquerypie.onlinelibrarysystem.entity.Book;
+import com.libraryquerypie.onlinelibrarysystem.entity.Borrow;
+import com.libraryquerypie.onlinelibrarysystem.enums.BorrowStatus;
 import com.libraryquerypie.onlinelibrarysystem.exception.ErrorCode;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.BookConflictException;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final BorrowRepository borrowRepository;
 
     @Transactional
     public Long registerBook(BookCreateRequest bookRequest) {
@@ -60,7 +67,13 @@ public class BookService {
     public void deleteBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.BOOK_NOT_FOUND, "존재하지 않는 도서 id: " + bookId));
-        bookRepository.delete(book);
-        log.info("{} 도서 삭제 성공", book.getTitle());
+        List<Borrow> borrowing = borrowRepository.findByBook(book).stream()
+                .filter(borrow -> borrow.getBorrowStatus().equals(BorrowStatus.BORROW)).toList();
+        if (!borrowing.isEmpty()) throw new BookConflictException("ISBN: " + borrowing.get(0).getBook().getISBN());
+        else if (borrowing.isEmpty()) {
+            borrowRepository.deleteAllByBook(book);
+            bookRepository.delete(book);
+            log.info("{} 도서 삭제 성공", book.getTitle());
+        }
     }
 }

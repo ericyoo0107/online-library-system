@@ -14,7 +14,8 @@ public enum ErrorCode {
     ISBN_DUPLICATION(HttpStatus.CONFLICT, "B-001", "중복된 ISBN."),
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "B-002", "책을 찾을 수 없음."),
     BOOK_ALREADY_BORROWED(HttpStatus.CONFLICT, "B-003", "이미 대출 중인 책."),
-    ALREADY_RETURNED(HttpStatus.CONFLICT, "B-004", "이미 반납된 책.");
+    ALREADY_RETURNED(HttpStatus.CONFLICT, "B-004", "이미 반납된 책."),
+    BOOK_BORROW_CONFLICT(HttpStatus.CONFLICT, "B-005", "대출 중인 책은 삭제 할수 없습니다.");
 
     private HttpStatus status;
     private String code;
