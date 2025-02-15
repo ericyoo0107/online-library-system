@@ -77,4 +77,22 @@ public class BookController {
         BookSearchResponse response = bookService.updateBook(bookId, request);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/delete/{bookId}")
+    @Operation(summary = "도서 삭제", description = "도서 정보를 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도서 삭제 성공",
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
+            @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "401", description = "인증 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    })
+    public ResponseEntity<String> deleteBook(
+            @Parameter(name = "bookId", description = "도서의 고유 ID", required = true, example = "1") @PathVariable("bookId") Long bookId) {
+        bookService.deleteBook(bookId);
+        return ResponseEntity.ok("도서 삭제 성공");
+    }
 }

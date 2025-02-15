@@ -55,4 +55,12 @@ public class BookService {
         log.info("{} 도서 정보 수정 성공", book.getTitle());
         return BookSearchResponse.fromEntity(updatedBook);
     }
+
+    @Transactional
+    public void deleteBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.BOOK_NOT_FOUND, "존재하지 않는 도서 id: " + bookId));
+        bookRepository.delete(book);
+        log.info("{} 도서 삭제 성공", book.getTitle());
+    }
 }
