@@ -35,6 +35,8 @@ public class BorrowController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "사용자 또는 도서를 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "409", description = "이미 대출 중인 도서",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
     public ResponseEntity<String> registerBorrow(@RequestHeader("Authorization") String token, @RequestBody @Valid BookBorrowRequest request) {
         String jwt = token.substring(7);

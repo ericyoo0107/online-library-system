@@ -1,5 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.exception;
 
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.AlreadyBorrowException;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadRequestException;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnException;
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.NotFoundException;
@@ -40,6 +41,14 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
         return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
     }
+
+    @ExceptionHandler(AlreadyBorrowException.class)
+    public ResponseEntity alreadyBorrowExHandler(AlreadyBorrowException ex) {
+        String messageExtra = ex.getBookId();
+        ErrorResponse errorResponseDto = ErrorResponse.of(ex.getErrorCode(), messageExtra);
+        return ResponseEntity.status(ex.getErrorCode().getStatus()).body(errorResponseDto);
+    }
+
 
     /**
      * DTO의 request가 컨트롤러 @Valid에서 빈 검증 통과 못한 경우  (G-001)
