@@ -35,7 +35,7 @@ public class BookController {
                     content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
+            @ApiResponse(responseCode = "401", description = "회원 인가 실패",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "409", description = "중복된 ISBN",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
@@ -66,7 +66,7 @@ public class BookController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
+            @ApiResponse(responseCode = "401", description = "회원 인가 실패",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
@@ -85,7 +85,7 @@ public class BookController {
                     content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
             @ApiResponse(responseCode = "400", description = "잘못된 입력 값",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
-            @ApiResponse(responseCode = "401", description = "인증 실패",
+            @ApiResponse(responseCode = "401", description = "회원 인가 실패",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
