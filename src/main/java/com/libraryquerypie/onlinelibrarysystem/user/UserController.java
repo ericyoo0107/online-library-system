@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "사용자 조회", description = "사용자 정보를 조회/검색 하는 API")
+    @Operation(summary = "사용자 전체 조회", description = "사용자 정보를 전체 조회 하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 조회 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/list/{userId}")
-    @Operation(summary = "사용자 조회", description = "사용자 정보를 조회/검색 하는 API")
+    @Operation(summary = "사용자 검색", description = "사용자 정보를 검색 하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 조회 성공",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
