@@ -46,7 +46,22 @@ public class BorrowService {
     public String checkBorrow(Long bookId) {
         List<Borrow> borrowingBook = borrowRepository.findBorrowByBookId(bookId);
         if (borrowingBook.isEmpty()) return BorrowStatus.RETURN.getStatus();
-        else if (borrowingBook.size() > 1) log.error("대출 시스템에 문제가 생겼습니다.");
+        else if (borrowingBook.size() > 1) {
+            log.error("대출 시스템에 문제가 생겼습니다.");
+            throw new RuntimeException("대출 시스템에 문제가 생겼습니다.");
+        }
         return BorrowStatus.BORROW.getStatus();
+    }
+
+    @Transactional
+    public void returnBook(String emailId, Long bookId) {
+        List<Borrow> borrowHistory = borrowRepository.findBorrowByUserIdAndBookId(emailId, bookId);
+        List<Borrow> borrowing = borrowHistory.stream().filter(borrow -> borrow.getBorrowStatus() == BorrowStatus.BORROW).toList();
+        if (borrowing.isEmpty()) {
+            throw new NotFoundException(ErrorCode.ALREADY_RETURNED, "bookID : " + bookId.toString());
+        } else if (borrowing.size() > 1) {
+            log.error("대출 시스템에 문제가 생겼습니다.");
+            throw new RuntimeException("대출 시스템에 문제가 생겼습니다.");
+        } else if (borrowing.size() == 1) borrowing.get(0).returnBook();
     }
 }

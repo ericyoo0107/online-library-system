@@ -13,7 +13,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U-003", "사용자를 찾을 수 없음."),
     ISBN_DUPLICATION(HttpStatus.CONFLICT, "B-001", "중복된 ISBN."),
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "B-002", "책을 찾을 수 없음."),
-    BOOK_ALREADY_BORROWED(HttpStatus.CONFLICT, "B-003", "이미 대출 중인 책."),;
+    BOOK_ALREADY_BORROWED(HttpStatus.CONFLICT, "B-003", "이미 대출 중인 책."),
+    ALREADY_RETURNED(HttpStatus.CONFLICT, "B-004", "이미 반납된 책.");
 
     private HttpStatus status;
     private String code;

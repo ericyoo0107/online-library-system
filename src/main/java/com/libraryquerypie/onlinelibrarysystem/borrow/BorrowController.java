@@ -47,7 +47,7 @@ public class BorrowController {
     }
 
     @GetMapping("/check/{bookId}")
-    @Operation(summary = "대출 확인", description = "도서가 대출 중인지 확인합니다.")
+    @Operation(summary = "대출 상태 확인", description = "도서가 대출 중인지 확인합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "도서 대출 가능",
                     content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
@@ -55,9 +55,33 @@ public class BorrowController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
     public ResponseEntity<String> checkBorrow(@PathVariable("bookId") Long bookId) {
         String status = borrowService.checkBorrow(bookId);
         return ResponseEntity.ok(status);
     }
+
+    @PatchMapping("/return/{bookId}")
+    @Operation(summary = "도서 반납", description = "대출된 도서를 반납합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "도서 반납 성공",
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE)),
+            @ApiResponse(responseCode = "401", description = "회원 인가 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "409", description = "이미 반납된 도서",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    })
+    public ResponseEntity<String> returnBook(@RequestHeader("Authorization") String token, @PathVariable("bookId") Long bookId) {
+        String jwt = token.substring(7);
+        String emailId = jwtUtils.extractEmailId(jwt);
+        borrowService.returnBook(emailId, bookId);
+        return ResponseEntity.ok("도서 반납 성공");
+    }
+
 }

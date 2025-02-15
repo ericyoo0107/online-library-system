@@ -51,4 +51,8 @@ public class Borrow extends BaseTimeEntity {
                 .book(book)
                 .build();
     }
+
+    public void returnBook() {
+        this.borrowStatus = BorrowStatus.RETURN;
+    }
 }

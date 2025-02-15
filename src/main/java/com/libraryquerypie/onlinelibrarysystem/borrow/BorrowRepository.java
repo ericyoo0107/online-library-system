@@ -10,4 +10,7 @@ import java.util.List;
 public interface BorrowRepository extends JpaRepository<Borrow, Long> {
     @Query("select borrow from Borrow borrow where borrow.book.id = :bookId and borrow.borrowStatus = 'BORROW'")
     List<Borrow> findBorrowByBookId(@Param("bookId") Long bookId);
+
+    @Query("select b from Borrow b where b.user.emailId = :emailId and b.book.id = :bookId")
+    List<Borrow> findBorrowByUserIdAndBookId(@Param("emailId") String emailId, @Param("bookId") Long bookId);
 }
