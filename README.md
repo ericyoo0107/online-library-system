@@ -88,6 +88,7 @@
 ---
 ### 📝 API 명세서 확인 방법
 - 로컬 실행 후 http://localhost:8080/swagger-ui/index.html 접속
+- Swagger API 명세서(docs/swagger_apis.json)를 통해 API 사용 방법 확인
 - Swagger API 테스트 순서 (User-Flow)
   1. 회원 가입
   2. 로그인
