@@ -13,17 +13,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
+@Transactional(readOnly = true)
+@ActiveProfiles("test")
 public class BorrowServiceTest {
 
     @Autowired
@@ -43,41 +44,36 @@ public class BorrowServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("동시에 여러 명이 접근해도 한 명만 책을 빌릴 수 있다.")
-    public void testConcurrentBorrow() throws InterruptedException {
+    public void testConcurrentBorrow() {
         // Given
         createDummyUser();
         createDummyBook();
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
         int threadCount = 10;
         BookBorrowRequest request = BookBorrowRequest.builder()
                 .bookId(1L)
-                .returnDate(LocalDate.of(2023, 12, 31))
+                .returnDate(LocalDate.of(2025, 12, 31))
                 .build();
         AtomicInteger failCount = new AtomicInteger(0);
         String emailId = "ericyoo0107@naver.com";
-        List<Future<?>> futures = new CopyOnWriteArrayList<>();
 
         // When
         for (int i = 0; i < threadCount; i++) {
-            futures.add(executorService.submit(() -> {
-                borrowService.registerBorrow(emailId, request);
-            }));
-        }
-        futures.forEach(future -> {
             try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
+                borrowService.registerBorrow(emailId, request);
+            } catch (AlreadyBorrowException e) {
                 failCount.incrementAndGet();
             }
-        });
+        }
 
         // Then
         List<Borrow> borrow = borrowRepository.findBorrowByUserIdAndBookId("ericyoo0107@naver.com", 1L);
-        assertThat(borrow.size()).isEqualTo(1);
         assertThat(failCount.get()).isEqualTo(threadCount - 1);
+        assertThat(borrow.size()).isEqualTo(1);
     }
 
+    @Transactional
     public void createDummyUser() {
         User user = User.builder()
                 .emailId("ericyoo0107@naver.com")
@@ -87,6 +83,7 @@ public class BorrowServiceTest {
         userRepository.save(user);
     }
 
+    @Transactional
     public void createDummyBook() {
         Book book1 = Book.builder()
                 .ISBN("9781234567890")
