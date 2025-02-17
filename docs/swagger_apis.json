@@ -1,0 +1,744 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "온라인 도서 관리 시스템 API",
+    "description": "도서 관리 시스템을 위한 API 명세서",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "JWT": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Borrow API",
+      "description": "대출 및 반납 관리 관련 API"
+    },
+    {
+      "name": "User API",
+      "description": "User 관련 API"
+    },
+    {
+      "name": "Book API",
+      "description": "도서 관리 관련 API"
+    }
+  ],
+  "paths": {
+    "/api/v1/book/update/{bookId}": {
+      "put": {
+        "tags": [
+          "Book API"
+        ],
+        "summary": "도서 수정",
+        "description": "도서 정보를 업데이트합니다.",
+        "operationId": "updateBook",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "도서의 고유 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "도서 수정 성공",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "회원 인가 실패",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "도서를 찾을 수 없음",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/signup": {
+      "post": {
+        "tags": [
+          "User API"
+        ],
+        "summary": "회원가입",
+        "description": "회원가입을 수행하는 API",
+        "operationId": "signup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "회원가입 후 Jwt 토큰을 반환",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "이미 가입되어 있는 E-MAIL인 경우 예외 발생",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/login": {
+      "post": {
+        "tags": [
+          "User API"
+        ],
+        "summary": "로그인",
+        "description": "아이디, 비밀번호로 로그인을 수행하는 API",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공 후 Jwt 토큰을 반환",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "회원가입 되지 않은 아이디, 비밀번호 입력",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/borrow/register": {
+      "post": {
+        "tags": [
+          "Borrow API"
+        ],
+        "summary": "대출 등록",
+        "description": "사용자가 도서를 대출 합니다.",
+        "operationId": "registerBorrow",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer {JWT}",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbElkIjoiZWVlQGdtYWlsLmNvbSIsImlhdCI6MTczOTYzMzUxMywiZXhwIjoxNzM5NzE5OTEzfQ.PVkQ-qZk43EElq-3dJ99Ur-zOMy5ujeTkAiYulIBnag"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookBorrowRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "도서 대출 성공",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "회원 인가 실패",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "사용자 또는 도서를 찾을 수 없음",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "이미 대출 중인 도서",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/book/register": {
+      "post": {
+        "tags": [
+          "Book API"
+        ],
+        "summary": "도서 등록",
+        "description": "새로운 도서를 추가합니다.",
+        "operationId": "registerBook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "새로운 도서 등록 성공",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "회원 인가 실패",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "중복된 ISBN",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/borrow/return/{bookId}": {
+      "patch": {
+        "tags": [
+          "Borrow API"
+        ],
+        "summary": "도서 반납",
+        "description": "대출된 도서를 반납합니다.",
+        "operationId": "returnBook",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer {JWT}",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbElkIjoiZWVlQGdtYWlsLmNvbSIsImlhdCI6MTczOTYzMzUxMywiZXhwIjoxNzM5NzE5OTEzfQ.PVkQ-qZk43EElq-3dJ99Ur-zOMy5ujeTkAiYulIBnag"
+          },
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "도서의 고유 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "도서 반납 성공",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "401": {
+            "description": "회원 인가 실패",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "도서를 찾을 수 없음",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "이미 반납된 도서",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "서버 내부 오류",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/list": {
+      "get": {
+        "tags": [
+          "User API"
+        ],
+        "summary": "사용자 전체 조회",
+        "description": "사용자 정보를 전체 조회 하는 API",
+        "operationId": "getAllUser",
+        "responses": {
+          "200": {
+            "description": "사용자 조회 성공",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/list/{userId}": {
+      "get": {
+        "tags": [
+          "User API"
+        ],
+        "summary": "사용자 검색",
+        "description": "사용자 정보를 검색 하는 API",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "사용자 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "사용자 조회 성공",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "사용자 정보 없음",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/borrow/check/{bookId}": {
+      "get": {
+        "tags": [
+          "Borrow API"
+        ],
+        "summary": "대출 상태 확인",
+        "description": "도서가 대출 중인지 확인합니다.",
+        "operationId": "checkBorrow",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "도서의 고유 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "도서 대출 가능",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "도서를 찾을 수 없음",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "서버 내부 오류",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/book/list/find": {
+      "get": {
+        "tags": [
+          "Book API"
+        ],
+        "summary": "도서 검색",
+        "description": "등록된 모든 도서를 조회하거나 특정 도서를 검색합니다.",
+        "operationId": "searchBook",
+        "parameters": [
+          {
+            "name": "arg0",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/BookSearchRequest"
+            }
+          },
+          {
+            "name": "arg1",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "도서 검색 성공",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/book/delete/{bookId}": {
+      "delete": {
+        "tags": [
+          "Book API"
+        ],
+        "summary": "도서 삭제",
+        "description": "도서 정보를 삭제합니다.",
+        "operationId": "deleteBook",
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "description": "도서의 고유 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "도서 삭제 성공",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "400": {
+            "description": "잘못된 입력 값",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "회원 인가 실패",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "도서를 찾을 수 없음",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "대출 중인 도서를 삭제 시도",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BookUpdateRequest": {
+        "required": [
+          "author",
+          "publishDate",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "자바의 정석"
+          },
+          "author": {
+            "type": "string",
+            "description": "작가",
+            "example": "남궁성"
+          },
+          "publishDate": {
+            "type": "string",
+            "description": "출판일",
+            "format": "date",
+            "example": "2023-10-10"
+          },
+          "tag": {
+            "type": "string",
+            "description": "태그",
+            "example": "코딩"
+          }
+        }
+      },
+      "SignupRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "이메일",
+            "format": "email",
+            "example": "eee@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "비밀번호",
+            "example": "1234"
+          },
+          "role": {
+            "type": "string",
+            "description": "권한",
+            "example": "USER",
+            "enum": [
+              "ADMIN",
+              "USER",
+              "ADMIN",
+              "USER"
+            ]
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": [
+          "emailId",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "emailId": {
+            "type": "string",
+            "description": "이메일",
+            "format": "email",
+            "example": "eee@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "비밀번호",
+            "example": "1234"
+          }
+        }
+      },
+      "BookBorrowRequest": {
+        "required": [
+          "bookId",
+          "returnDate"
+        ],
+        "type": "object",
+        "properties": {
+          "bookId": {
+            "type": "integer",
+            "description": "빌릴 책 ID",
+            "format": "int64",
+            "example": 1
+          },
+          "returnDate": {
+            "type": "string",
+            "description": "반납 날짜",
+            "format": "date",
+            "example": "2025-03-10"
+          }
+        }
+      },
+      "BookCreateRequest": {
+        "required": [
+          "author",
+          "publishDate",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "isbn": {
+            "type": "string",
+            "description": "isbn",
+            "example": "9311113104314"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "자바의 정석"
+          },
+          "author": {
+            "type": "string",
+            "description": "작가",
+            "example": "남궁성"
+          },
+          "publishDate": {
+            "type": "string",
+            "description": "출판일",
+            "format": "date",
+            "example": "2021-10-10"
+          },
+          "tag": {
+            "type": "string",
+            "description": "태그",
+            "example": "programming"
+          }
+        }
+      },
+      "BookSearchRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "example": "자바의 정석"
+          },
+          "author": {
+            "type": "string",
+            "description": "작가",
+            "example": "남궁성"
+          },
+          "sortby": {
+            "type": "string",
+            "description": "정렬 기준",
+            "example": "TITLE",
+            "enum": [
+              "TITLE",
+              "PUBLISH_DATE"
+            ]
+          },
+          "tag": {
+            "type": "string",
+            "description": "태그",
+            "example": "programming"
+          }
+        }
+      },
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
