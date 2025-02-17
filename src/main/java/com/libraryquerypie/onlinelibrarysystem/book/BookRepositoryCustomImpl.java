@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
         }
         List<Book> books = queryFactory.selectFrom(qBook)
                 .where(builder)
-                .orderBy(getSortOrder(request.getSortby()))
+                .orderBy(getSortOrder(Optional.ofNullable(request.getSortby())))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -61,11 +62,13 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
         return tag != null ? qBook.tag.contains(tag) : null;
     }
 
-    private OrderSpecifier<?> getSortOrder(BookSortBy bookSortBy) {
-        if (bookSortBy.equals(BookSortBy.TITLE)) {
-            return qBook.title.asc();
-        } else if (bookSortBy.equals(BookSortBy.PUBLISH_DATE)) {
-            return qBook.publishDate.asc();
+    private OrderSpecifier<?> getSortOrder(Optional<BookSortBy> bookSortBy) {
+        if(bookSortBy.isPresent()){
+            if (bookSortBy.get().equals(BookSortBy.TITLE)) {
+                return qBook.title.asc();
+            } else if (bookSortBy.get().equals(BookSortBy.PUBLISH_DATE)) {
+                return qBook.publishDate.asc();
+            }
         }
         return qBook.id.asc();
     }

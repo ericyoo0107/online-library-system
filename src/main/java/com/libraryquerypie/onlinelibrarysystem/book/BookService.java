@@ -1,5 +1,6 @@
 package com.libraryquerypie.onlinelibrarysystem.book;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookCreateRequest;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookSearchRequest;
 import com.libraryquerypie.onlinelibrarysystem.book.dto.request.BookUpdateRequest;
@@ -15,12 +16,18 @@ import com.libraryquerypie.onlinelibrarysystem.exception.custom.DuplicateIsbnExc
 import com.libraryquerypie.onlinelibrarysystem.exception.custom.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -31,6 +38,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BorrowRepository borrowRepository;
 
+    @CacheEvict(cacheNames = "BOOK", allEntries = true)
     @Transactional
     public Long registerBook(BookCreateRequest bookRequest) {
         if (bookRepository.existsByISBN(bookRequest.getIsbn())) {
@@ -41,7 +49,9 @@ public class BookService {
         return book.getId();
     }
 
-    public PageBookResponse searchBook(BookSearchRequest request, Pageable pageable) {
+    @Cacheable(cacheNames = "BOOK", key = "{#sort} == null ? 'default' : {#sort}")
+    public PageBookResponse searchBook(String sort, BookSearchRequest request, Pageable pageable) {
+
         Page<Book> books = bookRepository.searchBook(request, pageable);
         Page<BookSearchResponse> response = books.map(BookSearchResponse::fromEntity);
         return PageBookResponse.builder()
@@ -54,6 +64,7 @@ public class BookService {
                 .build();
     }
 
+    @CacheEvict(cacheNames = "BOOK", allEntries = true)
     @Transactional
     public BookSearchResponse updateBook(Long bookId, BookUpdateRequest request) {
         Book book = bookRepository.findById(bookId)
@@ -63,6 +74,7 @@ public class BookService {
         return BookSearchResponse.fromEntity(updatedBook);
     }
 
+    @CacheEvict(cacheNames = "BOOK", allEntries = true)
     @Transactional
     public void deleteBook(Long bookId) {
         Book book = bookRepository.findById(bookId)

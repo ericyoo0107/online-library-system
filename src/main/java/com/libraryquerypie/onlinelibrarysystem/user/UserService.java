@@ -11,6 +11,8 @@ import com.libraryquerypie.onlinelibrarysystem.user.dto.request.SignupRequest;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,7 @@ public class UserService {
         return accessToken;
     }
 
+    @CacheEvict(cacheNames = "USERS", allEntries = true)
     @Transactional
     public String signup(SignupRequest signupRequest){
         if(userRepository.findByEmailId(signupRequest.getEmail()).isPresent()){
@@ -55,6 +58,7 @@ public class UserService {
         return user.stream().map(UserResponse::fromEntity).toList();
     }
 
+    @Cacheable(cacheNames = "USERS")
     public List<UserResponse> getAllUser() {
         List<User> user = userRepository.findAll();
         return user.stream().map(UserResponse::fromEntity).toList();
