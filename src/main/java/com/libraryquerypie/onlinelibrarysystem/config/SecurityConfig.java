@@ -45,7 +45,9 @@ public class SecurityConfig {
                                         "/api/v1/book/list/**",
                                         "/api/v1/user/list",
                                         "/api/v1/user/list/**",
-                                        "/api/v1/borrow/check/**"
+                                        "/api/v1/borrow/check/**",
+                                        "/actuator/**",
+                                        "/actuator"
                                         )
                                 .permitAll()
                                 .anyRequest().authenticated()
