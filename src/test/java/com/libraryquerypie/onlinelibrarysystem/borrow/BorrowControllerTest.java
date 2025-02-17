@@ -34,16 +34,13 @@ public class BorrowControllerTest {
     @InjectMocks
     private BorrowController borrowController;
 
-    @Autowired
-    private BorrowRepository borrowRepository;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    @DisplayName("도서 대출 테스트")
+    @DisplayName("도서 대출을 시도한다.")
     void testRegisterBorrowSuccess() {
         String token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbElkIjoiZWVlQGdtYWlsLmNvbSIsImlhdCI6MTczOTYzMzUxMywiZXhwIjoxNzM5NzE5OTEzfQ.PVkQ-qZk43EElq-3dJ99Ur-zOMy5ujeTkAiYulIBnag";
         String jwt = token.substring(7);
