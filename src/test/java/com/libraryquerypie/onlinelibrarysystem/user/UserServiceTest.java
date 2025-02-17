@@ -2,6 +2,8 @@ package com.libraryquerypie.onlinelibrarysystem.user;
 
 import com.libraryquerypie.onlinelibrarysystem.entity.User;
 import com.libraryquerypie.onlinelibrarysystem.enums.Role;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadLoginException;
+import com.libraryquerypie.onlinelibrarysystem.exception.custom.BadSignupException;
 import com.libraryquerypie.onlinelibrarysystem.jwt.JwtUtils;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.LoginRequest;
 import com.libraryquerypie.onlinelibrarysystem.user.dto.request.SignupRequest;
@@ -17,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 public class UserServiceTest {
 
     @Autowired
@@ -58,7 +61,7 @@ public class UserServiceTest {
         LoginRequest loginRequest = new LoginRequest("invalid@email.com", "password");
 
         // When, Then
-        assertThrows(IllegalArgumentException.class, () -> userService.login(loginRequest));
+        assertThrows(BadLoginException.class, () -> userService.login(loginRequest));
     }
 
     @Test
@@ -68,7 +71,7 @@ public class UserServiceTest {
         LoginRequest loginRequest = new LoginRequest("ericyoo0107@naver.com", "wrong");
 
         // When, Then
-        assertThrows(IllegalArgumentException.class, () -> userService.login(loginRequest));
+        assertThrows(BadLoginException.class, () -> userService.login(loginRequest));
     }
 
     @Test
@@ -103,10 +106,9 @@ public class UserServiceTest {
                 .build();
 
         // When, Then
-        assertThrows(IllegalArgumentException.class, () -> userService.signup(request));
+        assertThrows(BadSignupException.class, () -> userService.signup(request));
     }
 
-    @Transactional
     public void createDummyUser() {
         User user = User.builder()
                 .emailId("ericyoo0107@naver.com")

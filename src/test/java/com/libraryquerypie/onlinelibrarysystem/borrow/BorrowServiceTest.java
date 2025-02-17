@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 public class BorrowServiceTest {
 
     @Autowired
@@ -33,6 +34,13 @@ public class BorrowServiceTest {
     private BookRepository bookRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+        bookRepository.deleteAll();
+        borrowRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("동시에 여러 명이 접근해도 한 명만 책을 빌릴 수 있다.")
@@ -70,7 +78,6 @@ public class BorrowServiceTest {
         assertThat(failCount.get()).isEqualTo(threadCount - 1);
     }
 
-    @Transactional
     public void createDummyUser() {
         User user = User.builder()
                 .emailId("ericyoo0107@naver.com")
@@ -80,7 +87,6 @@ public class BorrowServiceTest {
         userRepository.save(user);
     }
 
-    @Transactional
     public void createDummyBook() {
         Book book1 = Book.builder()
                 .ISBN("9781234567890")
