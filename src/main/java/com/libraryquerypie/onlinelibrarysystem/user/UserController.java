@@ -11,12 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
@@ -58,6 +60,7 @@ public class UserController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
     })
     public ResponseEntity<List<UserResponse>> getAllUser() {
+        log.info("사용자 전체 조회 API 호출!");
         List<UserResponse> response = userService.getAllUser();
         return ResponseEntity.ok(response);
     }

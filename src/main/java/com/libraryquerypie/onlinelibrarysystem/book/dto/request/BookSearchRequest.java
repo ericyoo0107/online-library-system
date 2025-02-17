@@ -29,4 +29,8 @@ public class BookSearchRequest {
         this.sortby = sortby;
         this.tag = tag;
     }
+
+    public String getSort() {
+        return sortby != null ? sortby.getValue() : "default";
+    }
 }

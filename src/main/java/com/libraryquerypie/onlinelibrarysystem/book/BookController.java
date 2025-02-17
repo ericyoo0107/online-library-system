@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/book")
@@ -55,7 +58,9 @@ public class BookController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     })
     public ResponseEntity<PageBookResponse> searchBook(BookSearchRequest request, Pageable pageable) {
-        PageBookResponse response = bookService.searchBook(request, pageable);
+        log.info("API 호출!");
+        String sort = request.getSort();
+        PageBookResponse response = bookService.searchBook(sort, request, pageable);
         return ResponseEntity.ok(response);
     }
 
